@@ -8,6 +8,11 @@ namespace APIPrueba
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+<<<<<<< HEAD
+=======
+
+            
+>>>>>>> 947f4b923517d49cbc833f0d5d3fe1a562adb10f
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
