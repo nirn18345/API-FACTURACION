@@ -3,63 +3,67 @@ using APIPrueba.Entidades.Operaciones;
 using APIPrueba.Utils;
 using GDifare.Utilitario.BaseDatos;
 using GDifare.Utilitario.Comun;
+using MicroserviciosGD1.Entidades;
+using MicroserviciosGD1.Entidades.Operaciones;
 using System;
 using System.Data;
 
 namespace APIPrueba.Datos
 {
-    public interface IMapeoDatosEjemplo
+    public interface IMapeoDatosDetalleFactura
     {
-        Ejemplo Obtener(int idEjemplo);
-        PagedCollection<Ejemplo> ObtenerListado(ListarEjemplosQuery query);
-        GrabarEjemploResponse Grabar(GrabarEjemploRequest request);
+      //  Ejemplo Obtener(int idDetalleFactura);
+        Detalle_factura ObtenerDFac(int id_detFact);
+     //   PagedCollection<Ejemplo> ObtenerListado(ListarEjemplosQuery query);
+        DetalleFacturaResponse GrabarDetFact(DetalleFacturaRequest request);
     }
 
-    public class MapeoDatosEjemplo : MapeoDatosBase, IMapeoDatosEjemplo
+    public class MapeoDatosDetalleFactura : MapeoDatosBase, IMapeoDatosDetalleFactura
     {
         #region Constructores de la clase
 
-        public MapeoDatosEjemplo(ISqlServer _sqlServer)
+        public MapeoDatosDetalleFactura(ISqlServer _sqlServer)
             : base(_sqlServer) { }
 
         #endregion
 
         #region Implementación de la interface
 
-        GrabarEjemploResponse IMapeoDatosEjemplo.Grabar(GrabarEjemploRequest request)
+
+        DetalleFacturaResponse IMapeoDatosDetalleFactura.GrabarDetFact(DetalleFacturaRequest request)
         {
             // Ejemplo: Se valida si existe el registro
-            if (request.IdEjemplo > 0)
+            if (request.IdDetalleFActura > 0)
             {
-                var ejemplo = ObtenerEjemplo(request.IdEjemplo);
+                var fact = ObtenerDetalleFactura(request.IdDetalleFActura);
 
                 // Si no existe se genera una respuesta de operación no exitosa.
-                if (ejemplo == null)
+                if (fact == null)
                 {
-                    return new GrabarEjemploResponse(
+                    return new DetalleFacturaResponse(
                         MensajesEjemplos.CODE_ERROR_VAL_01,
                         MensajesEjemplos.ERROR_VAL_01);
                 }
             }
-
             // Se graba el registro
-            var idEjemplo = GrabarEjemplo(request);
+            var id_detalle = GrabarDetalleFactura(request);
 
-            return new GrabarEjemploResponse()
+            return new DetalleFacturaResponse()
             {
-                IdEjemplo = idEjemplo
+                IdDetalleFActura = id_detalle
             };
         }
 
-        Ejemplo IMapeoDatosEjemplo.Obtener(int idEjemplo)
+        Detalle_factura IMapeoDatosDetalleFactura.ObtenerDFac(int idFac)
         {
-            return ObtenerEjemplo(idEjemplo);
+            return ObtenerDetalleFactura(idFac);
         }
 
-        PagedCollection<Ejemplo> IMapeoDatosEjemplo.ObtenerListado(ListarEjemplosQuery query)
+
+       /* PagedCollection<Ejemplo> IMapeoDatosDetalleFactura.ObtenerListado(ListarEjemplosQuery query)
         {
             return ObtenerListadoEjemplos(query);
-        }
+        }*/
 
         #endregion
 
@@ -84,7 +88,25 @@ namespace APIPrueba.Datos
             return ejemplo;
         }
 
-        private PagedCollection<Ejemplo> ObtenerListadoEjemplos(ListarEjemplosQuery query)
+        private Detalle_factura ObtenerDetalleFactura(int fact)
+        {
+            // Se establecen los parámetros del procedimiento a ejecutar
+            SqlServer.AddParameter("@i_accion", SqlDbType.Char, "C");
+            SqlServer.AddParameter("@i_id_det_factura", SqlDbType.Int, fact);
+
+            // Se realiza la consulta a la base de datos
+            var dataSet = SqlServer.ExecuteProcedure(StringHandler.ProcedureDetalleF);
+
+            if (dataSet.Tables.Count == 0) return null;
+            if (dataSet.Tables[0].Rows.Count == 0) return null;
+
+            var detalle = ConvertTo<Detalle_factura>(dataSet.Tables[0]);
+
+            // Se devuelve el objeto
+            return detalle;
+        }
+
+      /*  private PagedCollection<Ejemplo> ObtenerListadoEjemplos(ListarEjemplosQuery query)
         {
             // Se establecen los parámetros del procedimiento a ejecutar
             SqlServer.AddParameter("@i_accion", SqlDbType.Char, "G");
@@ -103,27 +125,28 @@ namespace APIPrueba.Datos
             // Se devuelve el objeto
             return new PagedCollection<Ejemplo>(ejemplos, totalRegistros, query.Limit);
         }
-
+      */
         #endregion
 
         #region Métodos de operaciones de la clase
 
-        private int GrabarEjemplo(GrabarEjemploRequest request)
+        private int GrabarDetalleFactura(DetalleFacturaRequest request)
         {
             // Se establecen los parámetros del procedimiento a ejecutar
-            SqlServer.AddParameter("@i_accion", SqlDbType.Char, request.IdEjemplo.Equals(0) ? "I" : "M");
-            SqlServer.AddParameter("@i_id_ejemplo", SqlDbType.Int, request.IdEjemplo);
-            SqlServer.AddParameter("@i_campo_uno", SqlDbType.VarChar, request.CampoUno);
+            SqlServer.AddParameter("@i_accion", SqlDbType.Char, request.IdDetalleFActura.Equals(0) ? "I" : "M");
+            SqlServer.AddParameter("@i_id_det_factura", SqlDbType.Int, request.IdDetalleFActura);
+            SqlServer.AddParameter("@i_cantidad", SqlDbType.Int, request.Cantidad);
             SqlServer.AddParameter("@i_descripcion", SqlDbType.VarChar, request.Descripcion);
+            SqlServer.AddParameter("@i_precio", SqlDbType.Decimal, request.Precio);
+            SqlServer.AddParameter("@i_facturaId", SqlDbType.Int, request.FacturaId);
+            SqlServer.AddParameter("@i_Estado", SqlDbType.Char, request.Estado);
 
             // Se realiza la consulta a la base de datos
-            var dataSet = SqlServer.ExecuteProcedure(StringHandler.ProcedureExample);
+            var dataSet = SqlServer.ExecuteProcedure(StringHandler.ProcedureDetalleF);
 
-            
+            return int.Parse(dataSet.Tables[0].Rows[0]["IdDetalleFactura"].ToString());
 
-            return int.Parse(dataSet.Tables[0].Rows[0]["id_ejemplo"].ToString());
 
-            
         }
 
         #endregion

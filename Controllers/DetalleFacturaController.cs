@@ -4,6 +4,7 @@ using APIPrueba.Entidades.Operaciones;
 using GDifare.Utilitario.Comun;
 using GDifare.Utilitario.Log;
 using GDifare.Utilitario.Servicios;
+using MicroserviciosGD1.Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,29 +14,29 @@ namespace APIPrueba.Controllers
 {
     [Route("gdifare/api/modulo/proyecto/v1")]
     [ApiController]
-    public class EjemploController : DifareApiController
+    public class DetalleFacturaController : DifareApiController
     {
         #region Miembros privados del controlador
 
-        private readonly IMapeoDatosEjemplo mapeoDatosEjemplo;
+        private readonly IMapeoDatosDetalleFactura mapeoDatosDetalleFact;
 
         #endregion
 
         #region Constructores del controlador
 
-        public EjemploController(
-            IMapeoDatosEjemplo _mapeoDatosEjemplo,
+        public DetalleFacturaController(
+            IMapeoDatosDetalleFactura _mapeoDetalleFactura,
             ILogHandler _logHandler)
             : base(_logHandler)
         {
-            mapeoDatosEjemplo = _mapeoDatosEjemplo;
+            mapeoDatosDetalleFact = _mapeoDetalleFactura;
         }
 
         #endregion
 
         #region Operaciones del controlador
 
-        // GET gdifare/api/modulo/proyecto/v1/consultar
+       /* // GET gdifare/api/modulo/proyecto/v1/consultar
         [HttpGet("consultar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -43,7 +44,7 @@ namespace APIPrueba.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Ejemplo>> Consultar(
             [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
-            [FromQuery] ConsultarEjemploQuery query)
+            [FromQuery] Entidades.Consultas.ConsultarEjemploQuery query)
         {
             try
             {
@@ -57,7 +58,7 @@ namespace APIPrueba.Controllers
                 var ejemplo = new Ejemplo();
                 await Task.Factory.StartNew(() =>
                 {
-                    ejemplo = mapeoDatosEjemplo.Obtener(query.IdEjemplo);
+                    ejemplo = mapeoDatosDetalleFact.Obtener(query.IdEjemplo);
                 });
 
 
@@ -67,9 +68,9 @@ namespace APIPrueba.Controllers
             {
                 return ResponseFault(e);
             }
-        }
+        }*/
 
-        // GET gdifare/api/modulo/proyecto/v1/listar
+     /*   // GET gdifare/api/modulo/proyecto/v1/listar
         [HttpGet("listar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -90,7 +91,7 @@ namespace APIPrueba.Controllers
                 var ejemplos = new PagedCollection<Ejemplo>(null, 0, 0);
                 await Task.Factory.StartNew(() =>
                 {
-                    ejemplos = mapeoDatosEjemplo.ObtenerListado(query);
+                    ejemplos = mapeoDatosDetalleFact.ObtenerListado(query);
                 });
 
                 return Ok(ejemplos);
@@ -99,48 +100,16 @@ namespace APIPrueba.Controllers
             {
                 return ResponseFault(e);
             }
-        }
+        }*/
 
-        // POST gdifare/api/modulo/proyecto/v1/grabar
-        [HttpPost("grabar")]
+        // POST gdifare/api/modulo/proyecto/v1/grabarFactura
+        [HttpPost("grabarDetalleFactura")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GrabarEjemploResponse>> Grabar(
+        public async Task<ActionResult<DetalleFacturaResponse>> GrabarDetFac(
             [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
-            [FromBody] GrabarEjemploRequest request)
-        {
-            try
-            {
-                // Inicialización de registro en ElasticSearch
-                InitLog(CONSUMER, REFERENCE_ID, string.Empty);
-
-                // Validaciones de parámetros de entrada
-              request.IsValid();
-
-                // Ejecución de la operación de datos
-                var response = new GrabarEjemploResponse();
-                await Task.Factory.StartNew(() =>
-                {
-                    response = mapeoDatosEjemplo.Grabar(request);
-                });
-
-                return Created(string.Empty, response);
-            }
-            catch (Exception e)
-            {
-                return ResponseFault(e);
-            }
-        }
-
-        // PUT gdifare/api/modulo/proyecto/v1/modificar
-        [HttpPut("modificar")]
-        [ProducesResponseType(StatusCodes.Status202Accepted)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GrabarEjemploResponse>> Modificar(
-            [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
-            [FromBody] GrabarEjemploRequest request)
+            [FromBody] DetalleFacturaRequest request)
         {
             try
             {
@@ -151,10 +120,44 @@ namespace APIPrueba.Controllers
                 request.IsValid();
 
                 // Ejecución de la operación de datos
-                var response = new GrabarEjemploResponse();
+                var response = new DetalleFacturaResponse();
                 await Task.Factory.StartNew(() =>
                 {
-                    response = mapeoDatosEjemplo.Grabar(request);
+                    response = mapeoDatosDetalleFact.GrabarDetFact(request);
+                });
+
+                return Created(string.Empty, response);
+            }
+            catch (Exception e)
+            {
+                return ResponseFault(e);
+            }
+        }
+
+
+        // Modificar Factura
+        // PUT gdifare/api/modulo/proyecto/v1/modificar
+        [HttpPut("modificarDetalleFactura")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<DetalleFacturaResponse>> ModificarDF(
+            [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
+            [FromBody] DetalleFacturaRequest request)
+        {
+            try
+            {
+                // Inicialización de registro en ElasticSearch
+                InitLog(CONSUMER, REFERENCE_ID, string.Empty);
+
+                // Validaciones de parámetros de entrada
+                request.IsValid();
+
+                // Ejecución de la operación de datos
+                var response = new DetalleFacturaResponse();
+                await Task.Factory.StartNew(() =>
+                {
+                    response = mapeoDatosDetalleFact.GrabarDetFact(request);
                 });
 
                 return Accepted(response);
@@ -164,6 +167,7 @@ namespace APIPrueba.Controllers
                 return ResponseFault(e);
             }
         }
+
 
         #endregion
     }
