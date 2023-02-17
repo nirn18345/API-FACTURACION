@@ -5,10 +5,10 @@ using Newtonsoft.Json;
 
 namespace APIPrueba.Entidades.Consultas
 {
-    public class ListarEjemplosQuery : PagedViewRequest
+    public class ListarClienteQuery : PagedViewRequest
     {
-        [JsonProperty("campoConsulta")]
-        public string CampoConsulta { get; set; }
+        [JsonProperty("nombre")]
+        public string Nombre { get; set; }
 
         public override void IsValid()
         {

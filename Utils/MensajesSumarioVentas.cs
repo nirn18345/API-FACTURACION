@@ -1,6 +1,6 @@
 ﻿namespace APIPrueba.Utils
 {
-    internal class MensajesEjemplos
+    internal class MensajesSumarioVentas
     {
         // Códigos de error
         internal const string CODE_ERROR_VAL_01 = "VAL-01";
