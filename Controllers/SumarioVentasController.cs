@@ -13,22 +13,22 @@ namespace APIPrueba.Controllers
 {
     [Route("gdifare/api/modulo/proyecto/v1")]
     [ApiController]
-    public class EjemploController : DifareApiController
+    public class SumarioVentasController : DifareApiController
     {
         #region Miembros privados del controlador
 
-        private readonly IMapeoDatosEjemplo mapeoDatosEjemplo;
+        private readonly IMapeoDatosSumarioVentas mapeoDatosSumarioVentas;
 
         #endregion
 
         #region Constructores del controlador
 
-        public EjemploController(
-            IMapeoDatosEjemplo _mapeoDatosEjemplo,
+        public SumarioVentasController(
+            IMapeoDatosSumarioVentas _mapeoDatosSumarioVentas,
             ILogHandler _logHandler)
             : base(_logHandler)
         {
-            mapeoDatosEjemplo = _mapeoDatosEjemplo;
+            mapeoDatosSumarioVentas = _mapeoDatosSumarioVentas;
         }
 
         #endregion
@@ -41,27 +41,27 @@ namespace APIPrueba.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Ejemplo>> Consultar(
+        public async Task<ActionResult<SumarioVentas>> Consultar(
             [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
-            [FromQuery] ConsultarEjemploQuery query)
+            [FromQuery] ConsultarSumarioVentasQuery query)
         {
             try
             {
                 // Inicialización de registro en Elasticsearch
-                InitLog(CONSUMER, REFERENCE_ID, query.IdEjemplo.ToString());
+                InitLog(CONSUMER, REFERENCE_ID, query.IdSumarioVentas.ToString());
 
                 // Validaciones de parámetros de entrada
                 query.IsValid();
 
                 // Ejecución de la operación de datos
-                var ejemplo = new Ejemplo();
+                var SumarioVentas = new SumarioVentas();
                 await Task.Factory.StartNew(() =>
                 {
-                    ejemplo = mapeoDatosEjemplo.Obtener(query.IdEjemplo);
+                    SumarioVentas = mapeoDatosSumarioVentas.Obtener(query.IdSumarioVentas);
                 });
 
 
-                return Ok(ejemplo);
+                return Ok(SumarioVentas);
             }
             catch (Exception e)
             {
@@ -74,9 +74,9 @@ namespace APIPrueba.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedCollection<Ejemplo>>> Listar(
+        public async Task<ActionResult<PagedCollection<SumarioVentas>>> Listar(
             [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
-            [FromQuery] ListarEjemplosQuery query)
+            [FromQuery] ListarSumarioVentasQuery query)
         {
             try
             {
@@ -87,13 +87,13 @@ namespace APIPrueba.Controllers
                 query.IsValid();
 
                 // Ejecución de la operación de datos
-                var ejemplos = new PagedCollection<Ejemplo>(null, 0, 0);
+                var SumarioVentass = new PagedCollection<SumarioVentas>(null, 0, 0);
                 await Task.Factory.StartNew(() =>
                 {
-                    ejemplos = mapeoDatosEjemplo.ObtenerListado(query);
+                    SumarioVentass = mapeoDatosSumarioVentas.ObtenerListado(query);
                 });
 
-                return Ok(ejemplos);
+                return Ok(SumarioVentass);
             }
             catch (Exception e)
             {
@@ -106,9 +106,9 @@ namespace APIPrueba.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GrabarEjemploResponse>> Grabar(
+        public async Task<ActionResult<GrabarSumarioVentasResponse>> Grabar(
             [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
-            [FromBody] GrabarEjemploRequest request)
+            [FromBody] GrabarSumarioVentasRequest request)
         {
             try
             {
@@ -119,10 +119,10 @@ namespace APIPrueba.Controllers
               request.IsValid();
 
                 // Ejecución de la operación de datos
-                var response = new GrabarEjemploResponse();
+                var response = new GrabarSumarioVentasResponse();
                 await Task.Factory.StartNew(() =>
                 {
-                    response = mapeoDatosEjemplo.Grabar(request);
+                    response = mapeoDatosSumarioVentas.Grabar(request);
                 });
 
                 return Created(string.Empty, response);
@@ -138,9 +138,9 @@ namespace APIPrueba.Controllers
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GrabarEjemploResponse>> Modificar(
+        public async Task<ActionResult<GrabarSumarioVentasResponse>> Modificar(
             [FromHeader] string REFERENCE_ID, [FromHeader] string CONSUMER,
-            [FromBody] GrabarEjemploRequest request)
+            [FromBody] GrabarSumarioVentasRequest request)
         {
             try
             {
@@ -151,10 +151,10 @@ namespace APIPrueba.Controllers
                 request.IsValid();
 
                 // Ejecución de la operación de datos
-                var response = new GrabarEjemploResponse();
+                var response = new GrabarSumarioVentasResponse();
                 await Task.Factory.StartNew(() =>
                 {
-                    response = mapeoDatosEjemplo.Grabar(request);
+                    response = mapeoDatosSumarioVentas.Grabar(request);
                 });
 
                 return Accepted(response);

@@ -4,15 +4,15 @@ using Newtonsoft.Json;
 
 namespace APIPrueba.Entidades.Operaciones
 {
-    public class GrabarEjemploResponse : DifareBaseResponse
+    public class GrabarSumarioVentasResponse : DifareBaseResponse
     {
-        [JsonProperty("idEjemplo")]
-        public int IdEjemplo { get; set; }
+        [JsonProperty("idSumarioVentas")]
+        public int IdSumarioVentas { get; set; }
 
-        internal GrabarEjemploResponse()
+        internal GrabarSumarioVentasResponse()
             : base(true, ApiCodes.CODE_ERROR_API_00, ApiCodes.ERROR_API_00) { }
 
-        internal GrabarEjemploResponse(string codigo, string mensaje)
+        internal GrabarSumarioVentasResponse(string codigo, string mensaje)
             : base(false, codigo, mensaje) { }
     }
 }
