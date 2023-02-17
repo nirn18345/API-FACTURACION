@@ -8,13 +8,14 @@ namespace APIPrueba
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            ///hlhllflgf
+ 
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
              Host.CreateDefaultBuilder(args)
                  .ConfigureWebHostDefaults(webBuilder =>
                  {
+                     ///rama factura
                      webBuilder.UseStartup<Startup>();
                  });
     }
