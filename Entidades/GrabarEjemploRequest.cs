@@ -21,12 +21,12 @@ namespace APIPrueba.Entidades.Operaciones
         {
             if (IdEjemplo < 0)
             {
-                throw new RequestException(MensajesEjemplos.CODE_ERROR_VAL_01, MensajesEjemplos.ERROR_VAL_01);
+                throw new RequestException(MensajesCliente.CODE_ERROR_VAL_01, MensajesCliente.ERROR_VAL_01);
             }
 
             if (string.IsNullOrEmpty(Convert.ToString(IdEjemplo)))
             {
-                throw new RequestException(MensajesEjemplos.CODE_ERROR_VAL_01, MensajesEjemplos.ERROR_VAL_01);
+                throw new RequestException(MensajesCliente.CODE_ERROR_VAL_01, MensajesCliente.ERROR_VAL_01);
             }
 
             base.IsValid();

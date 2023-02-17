@@ -41,8 +41,8 @@ namespace APIPrueba.Datos
                 if (fact == null)
                 {
                     return new DetalleFacturaResponse(
-                        MensajesEjemplos.CODE_ERROR_VAL_01,
-                        MensajesEjemplos.ERROR_VAL_01);
+                        MensajesCliente.CODE_ERROR_VAL_01,
+                        MensajesCliente.ERROR_VAL_01);
                 }
             }
             // Se graba el registro
@@ -69,7 +69,7 @@ namespace APIPrueba.Datos
 
         #region Métodos de consulta de la clase
 
-        private Ejemplo ObtenerEjemplo(int idEjemplo)
+        /*private Ejemplo ObtenerEjemplo(int idEjemplo)
         {
             // Se establecen los parámetros del procedimiento a ejecutar
             SqlServer.AddParameter("@i_accion", SqlDbType.Char, "C");
@@ -86,7 +86,7 @@ namespace APIPrueba.Datos
 
             // Se devuelve el objeto
             return ejemplo;
-        }
+        }*/
 
         private Detalle_factura ObtenerDetalleFactura(int fact)
         {

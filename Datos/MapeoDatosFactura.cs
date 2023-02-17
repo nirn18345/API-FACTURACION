@@ -41,8 +41,8 @@ namespace APIPrueba.Datos
                 if (fact == null)
                 {
                     return new FacturaResponse(
-                        MensajesEjemplos.CODE_ERROR_VAL_01,
-                        MensajesEjemplos.ERROR_VAL_01);
+                        MensajesCliente.CODE_ERROR_VAL_01,
+                        MensajesCliente.ERROR_VAL_01);
                 }
             }
             // Se graba el registro
