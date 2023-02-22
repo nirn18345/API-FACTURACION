@@ -2,11 +2,6 @@
 using GDifare.Utilitario.Comun;
 using GDifare.Utilitario.Comun.Exceptions;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace MicroserviciosGD1.Entidades
 {
     [JsonObject]
