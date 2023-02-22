@@ -18,7 +18,7 @@ namespace MicroserviciosGD1.Entidades
         {
             if (IdFactura < 0)
             {
-                throw new RequestException(MensajesCliente.CODE_ERROR_VAL_01, MensajesCliente.ERROR_VAL_01);
+                throw new RequestException(StringHandler.CODE_ERROR_VAL_01, StringHandler.ERROR_VAL_01);
             }
 
             base.IsValid();

@@ -5,19 +5,19 @@ using Newtonsoft.Json;
 
 namespace APIPrueba.Entidades.Consultas
 {
-    public class ConsultarSumarioVentasQuery : DifareBaseRequest
+    public class ConsultarFactura : DifareBaseRequest
     {
-        [JsonProperty("idSumarioVentas")]
-        public int IdSumarioVentas { get; set; }
+        [JsonProperty("IdFactura")]
+        public int IdFactura { get; set; }
 
-        public override void IsValid()
+        /*public override void IsValid()
         {
-            if (IdSumarioVentas <= 0)
+            if (IdFactura < 0)
             {
                 throw new RequestException(MensajesSumarioVentas.CODE_ERROR_VAL_01, MensajesSumarioVentas.ERROR_VAL_01);
             }
 
             base.IsValid();
-        }
+        }*/
     }
 }

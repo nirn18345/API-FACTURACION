@@ -21,19 +21,20 @@
         "SERVICE_TRACE_LEVEL_LOG": "DEBUG"
       }
     },
-    "$safeprojectname$": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "DATABASE": "Data Source=localhost;Initial Catalog=DBFACTURACION;Integrated Security = True",
-        "EMAILSVC": "http://10.100.2.12:8000",
-        "ENDPOINT": "Url=http://elasticsearch-master-monitoring.apps.ocp4mqa.grupodifare.com/,Indice=apitracelog-dev,TiempoEspera=5,MensajeEntradaSalida=true",
-        "SERVICE_TRACE_LEVEL_LOG": "DEBUG"
-      }
-    },
+      "$safeprojectname$": {
+   // "GDifare.Distribucion.ControllerFactura.API" : {
+    "commandName": "Project",
+    "launchBrowser": true,
+    "launchUrl": "swagger",
+    "applicationUrl": "http://localhost:5000",
+    "environmentVariables": {
+      "ASPNETCORE_ENVIRONMENT": "Development",
+      "DATABASE": "Data Source=localhost;Initial Catalog=DBFACTURACION;Integrated Security = True",
+      "EMAILSVC": "http://10.100.2.12:8000",
+      "ENDPOINT": "Url=http://elasticsearch-master-monitoring.apps.ocp4mqa.grupodifare.com/,Indice=apitracelog-dev,TiempoEspera=5,MensajeEntradaSalida=true",
+      "SERVICE_TRACE_LEVEL_LOG": "DEBUG"
+    }
+  },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,

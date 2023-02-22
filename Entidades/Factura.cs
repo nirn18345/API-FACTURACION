@@ -9,13 +9,14 @@ namespace MicroserviciosGD1.Entidades.Operaciones
     {
         public int IdFactura {get; set;}
 
+        public int ClienteId { get; set; }
         public DateTime FechaEmision { get; set; }
 
         public decimal Total { get; set; }
 
         public string Detalle { get; set; }
-        public int ClienteId { get; set; }
        
         public string Estado { get; set; }
+
      }
 }

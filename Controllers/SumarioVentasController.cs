@@ -4,6 +4,7 @@ using APIPrueba.Entidades.Operaciones;
 using GDifare.Utilitario.Comun;
 using GDifare.Utilitario.Log;
 using GDifare.Utilitario.Servicios;
+using MicroserviciosGD1.Entidades.Consultas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
