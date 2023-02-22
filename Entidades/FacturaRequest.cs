@@ -4,42 +4,37 @@ using GDifare.Utilitario.Comun.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MicroserviciosGD1.Entidades
 {
+    [JsonObject]
     public class FacturaRequest : DifareBaseRequest
     {
+       
         [JsonProperty("IdFactura")]
         public int IdFactura {get; set;}
-        [JsonProperty("ClienteId")]
+        [JsonProperty("clienteId")]
         public int ClienteId { get; set; }
 
-        [JsonProperty("FechaEmision")]
+        [JsonProperty("fecha_emision")]
         public DateTime FechaEmision { get; set; }
-        [JsonProperty("Detalle")]
+        [JsonProperty("detalle")]
         public string Detalle { get; set; }
 
-         [JsonProperty("Total")]
+         [JsonProperty("total")]
         public decimal Total { get; set; }
       
-        [JsonProperty("Estado")]
+        [JsonProperty("estado")]
         public string Estado { get; set; }
+      
+        public string Accion { get; set; }
 
-        public override void IsValid()
+        [JsonProperty("datos")]
+        public IList<DetalleFacturaRequest> DetalleFactura { get; set; }
+
+       /* public void resultado()
         {
-            if (IdFactura < 0)
-            {
-                throw new RequestException(MensajesEjemplos.CODE_ERROR_VAL_01, MensajesEjemplos.ERROR_VAL_01);
-            }
-
-            if (string.IsNullOrEmpty(Convert.ToString(IdFactura)))
-            {
-                throw new RequestException(MensajesEjemplos.CODE_ERROR_VAL_01, MensajesEjemplos.ERROR_VAL_01);
-            }
-
-            base.IsValid();
-        }
+            decimal resultado = (ob.Cantidad * ob.Precio);
+        }*/
     }
 }

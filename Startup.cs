@@ -34,7 +34,9 @@ namespace APIPrueba
             services.AddScopedServices();
 
             // Configuración de implementaciones de interfaces
-            services.AddTransient<IMapeoDatosEjemplo, MapeoDatosEjemplo>();
+            //services.AddTransient<IMapeoDatosEjemplo, MapeoDatosEjemplo>();
+            services.AddTransient<IMapeoDatosFactura, MapeoDatosFactura>();
+          //  services.AddTransient<IMapeoDatosDetalleFactura, MapeoDatosDetalleFactura>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
