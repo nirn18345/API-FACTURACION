@@ -1,17 +1,15 @@
-﻿using APIPrueba.Utils;
-using GDifare.Utilitario.Comun;
-using GDifare.Utilitario.Comun.Exceptions;
-using MicroserviciosGD1.Entidades.Operaciones;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MicroserviciosGD1.Entidades
 {
-    [JsonObject]
-    public class FacturaRequest : DifareBaseRequest
+    public class FacturaPeticion
     {
-        [JsonProperty("IdFactura")]
+
+        [JsonProperty("IdFactura")] 
         public int IdFactura { get; set; }
         [JsonProperty("ClienteId")]
         public int ClienteId { get; set; }

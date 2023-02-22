@@ -119,7 +119,7 @@ namespace APIPrueba.Controllers
                 InitLog(CONSUMER, REFERENCE_ID, string.Empty);
 
                 // Validaciones de parámetros de entrada
-                request.IsValid();
+                //request.IsValid();
 
                 // Ejecución de la operación de datos
                 var response = new FacturaResponse();
@@ -127,7 +127,6 @@ namespace APIPrueba.Controllers
                 {
                     response = mapeoDatosFactura.GrabarFact(request);
                 });
-
                 return Created(string.Empty, response);
             }
             catch (Exception e)
@@ -137,7 +136,7 @@ namespace APIPrueba.Controllers
         }
 
 
-        // Modificar Factura
+        /*// Modificar Factura
         // PUT gdifare/api/modulo/proyecto/v1/modificar
         [HttpPut("modificarFactura")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
@@ -170,7 +169,7 @@ namespace APIPrueba.Controllers
             }
         }
 
-
+        */
         #endregion
     }
 }

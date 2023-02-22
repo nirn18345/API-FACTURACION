@@ -1,5 +1,6 @@
 ﻿using APIPrueba.Utils;
 using GDifare.Utilitario.BaseDatos;
+using GDifare.Utilitario.Comun;
 using MicroserviciosGD1.Entidades;
 using MicroserviciosGD1.Entidades.Operaciones;
 using System;
@@ -13,7 +14,7 @@ namespace APIPrueba.Datos
     {
       //  Ejemplo Obtener(int idEjemplo);
        Factura ObtenerFac(int idFactura);
-        //   PagedCollection<Ejemplo> ObtenerListado(ListarEjemplosQuery query);
+         //PagedCollection<Factura> ObtenerListado(ListarFacturaQuery query);
 
        // List<ConsultarFactura> ObtenerDet(int idDewtalle);
         FacturaResponse GrabarFact(FacturaRequest request);
@@ -55,138 +56,120 @@ namespace APIPrueba.Datos
         [ExcludeFromCodeCoverage]
         FacturaResponse IMapeoDatosFactura.GrabarFact(FacturaRequest request)
         {
-            // Ejemplo: Se valida si existe el registro
-            var response = new FacturaResponse() {
-                ProcesoExitoso = false,
-                Mensaje = StringHandler.CODE_ERROR_VAL_01,
-                IdFactura = 0,
-            };
-            
-                //se graba la factura
-                GrabarFactura(request);
+            // SumarioVentas: Se valida si existe el registro
+            if (request.IdFactura > 0)
+            {
+                var factura = ObtenerFactura(request.IdFactura);
 
-                IList<DetalleFacturaRequest> listDetalle = new List<DetalleFacturaRequest>();
-                //  var listDetalle = request.DetalleFactura;
-                DetalleFacturaRequest det;
-                if (request.Accion == "I")
+                // Si no existe se genera una respuesta de operación no exitosa.
+                if (factura == null)
                 {
-                    foreach (var recorre in request.DetalleFactura)
-                    {
-                        det = new DetalleFacturaRequest
-                        {
-                            IdDetalleFActura = recorre.IdDetalleFActura,
-                            Cantidad = recorre.Cantidad,
-                            Descripcion = recorre.Descripcion,
-                            Precio = recorre.Precio,
-                            FacturaId = recorre.FacturaId,
-                            Estado = recorre.Estado
-                        };
-                        listDetalle.Add(det);
-
-                        GrabarDetalleFactura(request, recorre);
-                    }
-
+                    return new FacturaResponse(
+                        MensajesSumarioVentas.CODE_ERROR_VAL_01,
+                        MensajesSumarioVentas.ERROR_VAL_01);
                 }
-                else if (request.Accion == "M")
-                {
-                    foreach (var actualiza in request.DetalleFactura)
-                    {
-                        det = new DetalleFacturaRequest
-                        {
-                            IdDetalleFActura = actualiza.IdDetalleFActura,
-                            Cantidad = actualiza.Cantidad,
-                            Descripcion = actualiza.Descripcion,
-                            Precio = actualiza.Precio,
-                            Estado = actualiza.Estado
-                        };
-                        listDetalle.Add(det);
-                        GrabarDetalleFactura(request, actualiza);
-                    }
-                }
+            }
 
-                // Se setea el objeto de respuesta
-                response.ProcesoExitoso = true;
-                response.Mensaje = StringHandler.OK;
-                response.IdFactura = request.IdFactura;
-                return response;
-           }
+            GrabarFactura(request);
+            return new FacturaResponse();
+
+        }
 
 
-       /* PagedCollection<Ejemplo> IMapeoDatosFactura.ObtenerListado(ListarEjemplosQuery query)
-        {
-            return ObtenerListadoEjemplos(query);
-        }*/
+        /* PagedCollection<Ejemplo> IMapeoDatosFactura.ObtenerListado(ListarEjemplosQuery query)
+         {
+             return ObtenerListadoEjemplos(query);
+         }*/
 
         #endregion
 
         #region Métodos de consulta de la clase
 
 
-       /* private PagedCollection<Ejemplo> ObtenerListadoEjemplos(ListarEjemplosQuery query)
-        {
-            // Se establecen los parámetros del procedimiento a ejecutar
-            SqlServer.AddParameter("@i_accion", SqlDbType.Char, "G");
-            SqlServer.AddParameter("@i_campo_uno", SqlDbType.VarChar, query.CampoConsulta);
-            SqlServer.AddParameter("@i_descripcion", SqlDbType.VarChar, query.CampoConsulta);
-            SqlServer.AddParameter("@i_offset", SqlDbType.Int, query.Offset);
-            SqlServer.AddParameter("@i_limit", SqlDbType.Int, query.Limit);
+        /* private PagedCollection<Ejemplo> ObtenerListadoEjemplos(ListarEjemplosQuery query)
+         {
+             // Se establecen los parámetros del procedimiento a ejecutar
+             SqlServer.AddParameter("@i_accion", SqlDbType.Char, "G");
+             SqlServer.AddParameter("@i_campo_uno", SqlDbType.VarChar, query.CampoConsulta);
+             SqlServer.AddParameter("@i_descripcion", SqlDbType.VarChar, query.CampoConsulta);
+             SqlServer.AddParameter("@i_offset", SqlDbType.Int, query.Offset);
+             SqlServer.AddParameter("@i_limit", SqlDbType.Int, query.Limit);
 
-            // Se realiza la consulta a la base de datos
-            var dataSet = SqlServer.ExecuteProcedure(StringHandler.ProcedureExample);
+             // Se realiza la consulta a la base de datos
+             var dataSet = SqlServer.ExecuteProcedure(StringHandler.ProcedureExample);
 
-            // Se genera la consulta paginada
-            var totalRegistros = Convert.ToInt32(dataSet.Tables[0].Rows[0]["total_registros"]);
-            var ejemplos = ConvertToList<Ejemplo>(dataSet.Tables[1]);
+             // Se genera la consulta paginada
+             var totalRegistros = Convert.ToInt32(dataSet.Tables[0].Rows[0]["total_registros"]);
+             var ejemplos = ConvertToList<Ejemplo>(dataSet.Tables[1]);
 
-            // Se devuelve el objeto
-            return new PagedCollection<Ejemplo>(ejemplos, totalRegistros, query.Limit);
-        }
-       */
+             // Se devuelve el objeto
+             return new PagedCollection<Ejemplo>(ejemplos, totalRegistros, query.Limit);
+         }
+        */
         #endregion
 
         #region Métodos de operaciones de la clase
 
         private void GrabarFactura(FacturaRequest request)
         {
+
+            DateTime fechaActual = DateTime.Now;
+
+
+
             // Se establecen los parámetros del procedimiento a ejecutar
-            SqlServer.AddParameter("@i_accion", SqlDbType.Char, request.IdFactura.Equals(0) ? "I" : "M");
-            SqlServer.AddParameter("@i_id_factura", SqlDbType.Int, request.IdFactura);
-            SqlServer.AddParameter("@i_clienteId", SqlDbType.Int, request.ClienteId);
-            SqlServer.AddParameter("@i_fecha_emi", SqlDbType.DateTime, request.FechaEmision);
-            SqlServer.AddParameter("@i_detalle", SqlDbType.VarChar, request.Detalle);
-            SqlServer.AddParameter("@i_total", SqlDbType.Decimal, request.Total);
-            SqlServer.AddParameter("@i_tipo_registro", SqlDbType.Char, 'F');
-          
+                SqlServer.AddParameter("@i_accion", SqlDbType.Char, request.IdFactura.Equals(0) ? "I" : "M");
+                SqlServer.AddParameter("@i_id_factura", SqlDbType.Int, request.IdFactura);
+                SqlServer.AddParameter("@i_clienteId", SqlDbType.Int, request.ClienteId);
+                SqlServer.AddParameter("@i_fecha_emi", SqlDbType.DateTime, fechaActual);
+                SqlServer.AddParameter("@i_detalle", SqlDbType.VarChar, request.Detalle);
+                SqlServer.AddParameter("@i_total", SqlDbType.Decimal, request.Total);
+                SqlServer.AddParameter("@i_tipo_registro", SqlDbType.Char, 'F');
+
+
+
+                // Se realiza la consulta a la base de datos
+                var dataSet = SqlServer.ExecuteProcedure(Environment.GetEnvironmentVariable(StringHandler.Database), StringHandler.ProcedureFactura);
+
+            if (dataSet.Tables.Count > 0)
+            {
+                var responseRow = dataSet.Tables[0].Rows[0];
+                var idCApturado=request.IdFactura = Int32.Parse(responseRow["IdFactura"].ToString());
+
+                GrabarDetalleFactura(request.datos, idCApturado);
+
+
+            }
             
-
-            // Se realiza la consulta a la base de datos
-            var dataSet = SqlServer.ExecuteProcedure(Environment.GetEnvironmentVariable(StringHandler.Database),StringHandler.ProcedureFactura);
-
-            request.IdFactura = int.Parse(dataSet.Tables[0].Rows[0]["IdFactura"].ToString());
-
+            
+            //request.IdFactura = int.Parse(dataSet.Tables[0].Rows[0]["IdFactura"].ToString());
+            
 
         }
 
 
         [ExcludeFromCodeCoverage]
-        private void GrabarDetalleFactura(FacturaRequest request, DetalleFacturaRequest detalles)
+        private void GrabarDetalleFactura(List<DetalleFacturaRequest> request, int IdFactura)
         {
-            
-            SqlServer.AddParameter("@i_accion", SqlDbType.Char, detalles.IdDetalleFActura.Equals(0) ? "I" : "M");
-            SqlServer.AddParameter("@i_id_det_factura", SqlDbType.Int, detalles.IdDetalleFActura);
-            SqlServer.AddParameter("@i_cantidad", SqlDbType.Int, detalles.Cantidad);
-            SqlServer.AddParameter("@i_descripcion", SqlDbType.VarChar, detalles.Descripcion);
-            SqlServer.AddParameter("@i_precio", SqlDbType.Decimal, detalles.Precio);
-            SqlServer.AddParameter("@i_facturaId", SqlDbType.Int, detalles.FacturaId);
-            SqlServer.AddParameter("@i_tipo_registro", SqlDbType.Char, 'D');
-            
-            // Se realiza la consulta a la base de datos
-            var dataSet = SqlServer.ExecuteProcedure(Environment.GetEnvironmentVariable(StringHandler.Database), StringHandler.ProcedureFactura);
-            
-            if (dataSet.Tables.Count > 0)
-            {
-                var responseRow = dataSet.Tables[0].Rows[0];
-                detalles.IdDetalleFActura = Int32.Parse(responseRow["IdDetalleFActura"].ToString());
+
+            foreach (DetalleFacturaRequest d in request) {
+
+                SqlServer.AddParameter("@i_accion", SqlDbType.Char, d.IdDetalleFActura.Equals(0) ? "I" : "M");
+                SqlServer.AddParameter("@i_id_det_factura", SqlDbType.Int, d.IdDetalleFActura);
+                SqlServer.AddParameter("@i_cantidad", SqlDbType.Int, d.Cantidad);
+                SqlServer.AddParameter("@i_descripcion", SqlDbType.VarChar, d.Descripcion);
+                SqlServer.AddParameter("@i_precio", SqlDbType.Decimal, d.Precio);
+                SqlServer.AddParameter("@i_facturaId", SqlDbType.Int, IdFactura);
+                SqlServer.AddParameter("@i_tipo_registro", SqlDbType.Char, 'D');
+
+                // Se realiza la consulta a la base de datos
+                var dataSet = SqlServer.ExecuteProcedure(Environment.GetEnvironmentVariable(StringHandler.Database), StringHandler.ProcedureFactura);
+
+                if (dataSet.Tables.Count > 0)
+                {
+                    var responseRow = dataSet.Tables[0].Rows[0];
+                    d.IdDetalleFActura = Int32.Parse(responseRow["IdDetalleFActura"].ToString());
+                }
             }
 
         }
